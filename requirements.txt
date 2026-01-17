@@ -6,4 +6,5 @@ scikit-learn
 requests
 flask
 sys
+scikit-learn
 -e .
