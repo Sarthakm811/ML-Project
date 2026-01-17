@@ -42,12 +42,38 @@ class ModelTrainer:
                 "Gradient Boosting": GradientBoostingRegressor(),
                 "Linear Regression": LinearRegression(),
                 "XGB Regressor": XGBRegressor(),
-                "CatBoost Regressor": CatBoostRegressor(verbose=False),
+                "CatBoost Regressor": CatBoostRegressor(verbose=False, depth=6, learning_rate=0.1, iterations=100),
                 "AdaBoost Regressor": AdaBoostRegressor(),
                 "KNeighbors Regressor": KNeighborsRegressor()
             }
 
-            model_report: dict = evaluate_model(X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test, models=models)
+            params={
+                "Decision Tree": {
+                    'criterion':['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
+                },
+                "Random Forest":{
+                    'n_estimators': [8,16,32,64,128,256]
+                },
+                "Gradient Boosting":{
+                    'learning_rate':[.1,.01,.05,.001],
+                    'subsample':[0.6,0.7,0.75,0.8,0.85,0.9],
+                    'n_estimators': [8,16,32,64,128,256]
+                },
+                "Linear Regression":{},
+                "XGB Regressor":{
+                    'learning_rate':[.1,.01,.05,.001],
+                    'n_estimators': [8,16,32,64,128,256]
+                },
+                "CatBoost Regressor":{},
+                "AdaBoost Regressor":{
+                    'learning_rate':[.1,.01,0.5,.001],
+                    'n_estimators': [8,16,32,64,128,256]
+                },
+                "KNeighbors Regressor":{}
+                
+            }
+
+            model_report: dict = evaluate_model(X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test, models=models,params=params)
 
             # To get the best model score from the dict
             best_model_name = max(model_report, key=model_report.get)
@@ -70,3 +96,5 @@ class ModelTrainer:
 
         except Exception as e:
             raise CustomException(e, sys)
+
+
