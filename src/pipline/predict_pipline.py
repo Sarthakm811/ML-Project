@@ -28,6 +28,11 @@ class PredictPipeline:
             
             data_scaled = preprocessor.transform(features)
             preds = model.predict(data_scaled)
+            
+            # Clamp predictions to valid range (0-100)
+            # Math scores should always be between 0 and 100
+            preds = [max(0, min(100, pred)) for pred in preds]
+            
             return preds
         
         except Exception as e:
